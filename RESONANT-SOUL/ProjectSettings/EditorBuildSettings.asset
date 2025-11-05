@@ -12,5 +12,5 @@ EditorBuildSettings:
     path: Assets/_ResonantSoul/Scenes/MainGameScenes.unity
     guid: f563b205986090d45a2505a982f684de
   m_configObjects:
-    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 33d3cdbd047f9c24c9e5535e883fb05e, type: 3}
   m_UseUCBPForAssetBundles: 0

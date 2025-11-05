@@ -3,84 +3,101 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-// ITickable (Update) と IFixedTickable (FixedUpdate) の両方を実装します
 public class PlayerMovement : ITickable, IFixedTickable
 {
     // --- DIコンテナから注入されるコンポーネント ---
     private readonly Rigidbody2D _rb;
     private readonly PlayerInput _input;
+    private readonly VesselState _playerState; 
+    private readonly Transform _transform; 
 
     // --- 設定値 ---
     private readonly float _moveSpeed = 10.0f;
-    private readonly float _jumpForce = 15.0f; // ジャンプ力
+    private readonly float _jumpForce = 15.0f;
+    private readonly LayerMask _groundLayerMask;
+    private readonly float _groundCheckRaycastDistance = 1.1f;
 
     // --- 内部状態 ---
-    private bool _jumpInputBuffer = false; // 👈 ジャンプ入力バッファ
+    private bool _jumpInputBuffer = false;
+    private bool _isGrounded = false;
 
-    // コンストラクタ: DIコンテナが Rigidbody2D と PlayerInput を自動で注入
+    // コンストラクタ: VesselState を追加
     [Inject]
-    public PlayerMovement(Rigidbody2D rb, PlayerInput input)
+    public PlayerMovement(Rigidbody2D rb, PlayerInput input, VesselState vesselState)
     {
         _rb = rb;
         _input = input;
-    }
-    
+        _playerState = vesselState;
+        _transform = rb.transform;
 
-    // VContainerが毎フレームの "Update" のタイミングで呼ぶ
+        _groundLayerMask = LayerMask.GetMask("Ground");
+    }
+
     public void Tick()
     {
-        // --- 入力のキャッチ ---
-        // "Update" (Tick) で押された瞬間の入力をキャッチする
-        // 物理演算（FixedTick）で消費されるまで true を保持する
         if (_input.IsJumpPressed)
         {
             _jumpInputBuffer = true;
-            Debug.Log("Jump Input Buffered!"); // ログをTick側に移動
+            Debug.Log("Jump Input Buffered!");
         }
-
-        // ダッシュや攻撃の入力もここでバッファリングする
-        if (_input.IsDashPressed)
-        {
-            // TODO: ダッシュ入力バッファ
-            Debug.Log("Dash Performed! (Input Buffered)");
-        }
-        if (_input.IsNormalAttackPressed)
-        {
-            // TODO: 攻撃入力バッファ
-            Debug.Log("Normal Attack Performed! (Input Buffered)");
-        }
+        
     }
 
-    // VContainerが毎フレームの "FixedUpdate" のタイミングで呼ぶ
     public void FixedTick()
     {
-        // --- 物理演算の実行 ---
-        Move();
-        Jump(); // ジャンプ処理もここ
+        CheckGrounded();
+        Move(); 
+        Jump();
+    }
+
+    private void CheckGrounded()
+    {
+        var hit = Physics2D.Raycast(
+            _rb.position,
+            Vector2.down,
+            _groundCheckRaycastDistance,
+            _groundLayerMask
+        );
+        _isGrounded = hit.collider != null;
+        Debug.DrawRay(_rb.position, Vector2.down * _groundCheckRaycastDistance, _isGrounded ? Color.green : Color.red);
     }
 
     private void Move()
     {
-        // 移動は PlayerInput の MoveDirection を直接参照してもOK
-        // (WasPressedThisFrame と違って、MoveDirection は状態を保持し続けるため)
+        float moveInputX = _input.MoveDirection.x;
+
+        // X軸の速度を設定
         _rb.linearVelocity = new Vector2(
-            _input.MoveDirection.x * _moveSpeed,
+            moveInputX * _moveSpeed,
             _rb.linearVelocity.y
+        );
+
+        // --- 左右反転ロジック ---
+        // 入力がある場合のみ向きを変える
+        if (moveInputX > 0f)
+        {
+            _playerState.FacingDirection = 1f;
+        }
+        else if (moveInputX < 0f)
+        {
+            _playerState.FacingDirection = -1f;
+        }
+
+        // プレイヤーのTransformのlocalScale.x を FacingDirection に合わせる
+        _transform.localScale = new Vector3(
+            _playerState.FacingDirection, 
+            _transform.localScale.y, 
+            _transform.localScale.z
         );
     }
 
     private void Jump()
     {
-        // "FixedUpdate" (FixedTick) で入力バッファを消費する
-        if (_jumpInputBuffer)
+        if (_jumpInputBuffer && _isGrounded)
         {
-            // バッファを消費
-            _jumpInputBuffer = false;
-
-            // TODO: 現在は接地判定がないため、空中でも無限にジャンプできます
             _rb.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
             Debug.Log("Jump Executed in FixedTick!");
         }
+        _jumpInputBuffer = false;
     }
-
 }

@@ -458,6 +458,7 @@ MonoBehaviour:
     TypeName: 
   autoRun: 1
   autoInjectGameObjects: []
+  _attackHitboxPrefab: {fileID: 4518580637747991710, guid: 3ab2084c5e5dc414ea3a3ed75a10bbeb, type: 3}
 --- !u!4 &1711273339
 Transform:
   m_ObjectHideFlags: 0
