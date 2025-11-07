@@ -31,12 +31,14 @@
     * `PlayerInputActions` の定義
     * VContainerによるDIアーキテクチャの構築
     * プレイヤーの基本操作（左右移動・ジャンプ）の実装完了
+    * SPUMのキャラ実装(剣聖の器のみ)とアニメーション連携
 
 ## 4. 技術スタック (使用ツール・ライブラリ)
 
 * **エンジン:** Unity 6000.2.6f2
 * **IDE:** JetBrains Rider
 * **バージョン管理:** Git / GitHub / Git LFS
+* **Asset:SPUM**
 * **レンダリング:** Universal 2D (URP)
 * **アート:** Aseprite (Aseprite Importer)
 * **入力:** Unity Input System
