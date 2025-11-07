@@ -38,7 +38,7 @@
 * **エンジン:** Unity 6000.2.6f2
 * **IDE:** JetBrains Rider
 * **バージョン管理:** Git / GitHub / Git LFS
-* **Asset:**SPUM
+* **Asset:** SPUM
 * **レンダリング:** Universal 2D (URP)
 * **アート:** Aseprite (Aseprite Importer)
 * **入力:** Unity Input System
