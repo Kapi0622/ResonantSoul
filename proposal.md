@@ -195,8 +195,9 @@
         - **役割:** 非同期処理の効率化。Unityのメインスレッドで動作する`async/await`を提供し、コールバック地獄を回避。
     - **R3 (Reactive Extensions):**
         - **役割:** リアクティブプログラミング。UniRxの後継。イベント処理（入力、UIクリック、敵の死亡通知など）を統一的に記述。
-    - **VContainer (DI Container):**
+    - ~~**VContainer (DI Container):**~~
         - **役割:** コードの疎結合化。UniTask/R3と親和性が高いDIコンテナ。コードの保守性を高め、将来の拡張（マルチプレイ化）に備える。
+        - 実装コストを考慮して、一度プロジェクトから除外
     - **DOTween (Tween Animation):**
         - **役割:** 「ゲームフィール」の演出。UIアニメーション、ヒットストップ、アイテム吸引演出など「Juiciness」を実現する必須アセット。
     - **MessagePack for C# (Serializer):**
