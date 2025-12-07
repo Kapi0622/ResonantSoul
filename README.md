@@ -42,7 +42,8 @@
 * **レンダリング:** Universal 2D (URP)
 * **アート:** Aseprite (Aseprite Importer)
 * **入力:** Unity Input System
-* **DIコンテナ:** VContainer
+* ~~**DIコンテナ:** VContainer~~
+  ※制作難度を考えて、一度見送り
 * **非同期処理:** UniTask
 * **リアクティブ:** R3 (※UIやゲームイベントで使用予定)
 * **アニメーション:** DOTween (HOTween v2)
